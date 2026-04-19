@@ -47,6 +47,9 @@ COPY warroom/requirements.txt /tmp/warroom-requirements.txt
 RUN python3 -m venv /opt/warroom-venv \
     && /opt/warroom-venv/bin/pip install --no-cache-dir -r /tmp/warroom-requirements.txt
 
+# Claude Code CLI — required by claude-agent-sdk to spawn agent loops
+RUN npm install -g @anthropic-ai/claude-code
+
 # Node artifacts from builder (native .node binaries compiled for Bookworm)
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/dist ./dist
