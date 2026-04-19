@@ -1,0 +1,45 @@
+{
+  "name": "claudeclaw",
+  "version": "2.0.0",
+  "description": "Personal AI assistant: Telegram/Discord remote for Claude Code with multi-agent, memory, War Room, and more",
+  "type": "module",
+  "private": true,
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "dev": "tsx src/index.ts",
+    "start": "node dist/index.js",
+    "setup": "tsx scripts/setup.ts",
+    "status": "tsx scripts/status.ts",
+    "schedule": "tsx src/schedule-cli.ts",
+    "mission": "tsx src/mission-cli.ts",
+    "agent:create": "tsx src/agent-create-cli.ts",
+    "agent:voice": "tsx src/agent-voice-bridge.ts",
+    "meet": "tsx src/meet-cli.ts",
+    "warroom": "python warroom/server.py"
+  },
+  "dependencies": {
+    "@anthropic-ai/claude-agent-sdk": "^0.2.34",
+    "@google/genai": "^1.44.0",
+    "@hono/node-server": "^1.13.7",
+    "better-sqlite3": "^11.5.0",
+    "cron-parser": "^4.9.0",
+    "grammy": "^1.31.0",
+    "hono": "^4.6.10",
+    "js-yaml": "^4.1.0",
+    "pino": "^9.5.0",
+    "pino-pretty": "^11.3.0",
+    "qrcode-terminal": "^0.12.0",
+    "whatsapp-web.js": "^1.26.0"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.12",
+    "@types/js-yaml": "^4.0.9",
+    "@types/node": "^22.9.0",
+    "@types/qrcode-terminal": "^0.12.2",
+    "tsx": "^4.19.2",
+    "typescript": "^5.6.3"
+  }
+}

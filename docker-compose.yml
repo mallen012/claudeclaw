@@ -1,0 +1,18 @@
+services:
+  claudeclaw:
+    image: ghcr.io/mallen012/claudeclaw:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    env_file: .env
+    ports:
+      - "3141:3141"   # Dashboard (Hono web UI)
+      - "7860:7860"   # War Room WebSocket (Pipecat/Gemini Live)
+    volumes:
+      # Persistent state — must survive container restarts
+      - ./store:/app/store                     # SQLite DB + PID lock
+      - ./.wwebjs_auth:/app/.wwebjs_auth       # WhatsApp session (avoids re-QR on restart)
+      - ./.wwebjs_cache:/app/.wwebjs_cache     # WhatsApp browser cache
+      - ./workspace/uploads:/app/workspace/uploads  # Telegram media
+    shm_size: "256m"   # Chromium needs shared memory for WhatsApp bridge

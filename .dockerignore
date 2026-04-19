@@ -1,0 +1,13 @@
+node_modules/
+dist/
+store/
+.env
+.wwebjs_auth/
+.wwebjs_cache/
+workspace/uploads/
+*.db
+*.db-wal
+*.db-shm
+*.pid
+.git/
+.gitignore

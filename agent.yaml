@@ -1,0 +1,66 @@
+# ClaudeClaw v2 — agent configuration
+# Each agent gets its own Telegram bot, working directory, and system prompt (CLAUDE.md).
+# External overrides can live in $CLAUDECLAW_CONFIG/agent.yaml (defaults to ~/.claudeclaw/agent.yaml).
+
+defaults:
+  model: claude-sonnet-4-6
+  max_turns: 30
+  timeout_ms: 900000
+  mcp_allowlist: []   # empty = inherit all project/user MCP servers
+
+agents:
+  - id: main
+    name: Main
+    emoji: "🧠"
+    description: General-purpose assistant. Default recipient for all messages.
+    cwd: ""   # empty = project root
+    claude_md: agents/main/CLAUDE.md
+    telegram_token_env: TELEGRAM_BOT_TOKEN
+
+  - id: comms
+    name: Comms
+    emoji: "💬"
+    description: Handles email, Slack, Webex messaging, and all inbound/outbound communication.
+    cwd: ""
+    claude_md: agents/comms/CLAUDE.md
+    telegram_token_env: COMMS_BOT_TOKEN
+
+  - id: content
+    name: Content
+    emoji: "✍️"
+    description: Writes, edits, and publishes — blog posts, social, docs, scripts.
+    cwd: ""
+    claude_md: agents/content/CLAUDE.md
+    telegram_token_env: CONTENT_BOT_TOKEN
+
+  - id: ops
+    name: Ops
+    emoji: "⚙️"
+    description: Sysadmin, deployments, infrastructure, file management, backups.
+    cwd: ""
+    claude_md: agents/ops/CLAUDE.md
+    telegram_token_env: OPS_BOT_TOKEN
+
+  - id: research
+    name: Research
+    emoji: "🔬"
+    description: Deep dives, competitive analysis, market research, technical investigation.
+    cwd: ""
+    claude_md: agents/research/CLAUDE.md
+    telegram_token_env: RESEARCH_BOT_TOKEN
+
+  - id: coach
+    name: Coach
+    emoji: "🦓"
+    description: Lincoln Zebras Baseball coaching operations for Head Coach Mike Allen.
+    cwd: ""
+    claude_md: agents/coach/CLAUDE.md
+    telegram_token_env: COACH_BOT_TOKEN
+
+  - id: webster
+    name: Webster
+    emoji: "📞"
+    description: Webex Calling / Meetings / Messaging admin for Perdigon Group customers.
+    cwd: ""
+    claude_md: agents/webster/CLAUDE.md
+    telegram_token_env: WEBSTER_BOT_TOKEN

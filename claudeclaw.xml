@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<Container version="2">
+  <Name>ClaudeClaw</Name>
+  <Repository>ghcr.io/mallen012/claudeclaw:latest</Repository>
+  <Registry>https://ghcr.io/mallen012/claudeclaw</Registry>
+  <Network>bridge</Network>
+  <Shell>bash</Shell>
+  <Privileged>false</Privileged>
+  <Overview>ClaudeClaw — multi-agent AI personal assistant. Telegram bots for 7 agents (Main, Comms, Content, Ops, Research, Coach, Webster) plus War Room voice interface. Dashboard at port 3141.</Overview>
+  <Category>Tools: Other:</Category>
+  <WebUI>http://[IP]:[PORT:3141]/</WebUI>
+  <Icon>https://raw.githubusercontent.com/mallen012/claudeclaw/main/assets/icon.png</Icon>
+  <ExtraParams>--shm-size=256m</ExtraParams>
+
+  <!-- Ports -->
+  <Config Name="Dashboard Port" Target="3141" Default="3141" Mode="tcp"
+    Description="Web dashboard (Hono UI)" Type="Port" Display="always" Required="true" Mask="false">3141</Config>
+  <Config Name="War Room Port" Target="7860" Default="7860" Mode="tcp"
+    Description="Pipecat voice WebSocket (Gemini Live / Deepgram)" Type="Port" Display="always" Required="false" Mask="false">7860</Config>
+
+  <!-- Paths -->
+  <Config Name="AppData / Store" Target="/app/store" Default="/mnt/user/appdata/claudeclaw/store"
+    Mode="rw" Description="SQLite database and PID lock — must persist across restarts" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/claudeclaw/store</Config>
+  <Config Name="Claude Config" Target="/root/.claude" Default="/mnt/user/appdata/claudeclaw/.claude"
+    Mode="ro" Description="Claude Code settings + MCP server configs (copy from ~/.claude on your dev machine)" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/claudeclaw/.claude</Config>
+  <Config Name="Env File" Target="/app/.env" Default="/mnt/user/appdata/claudeclaw/.env"
+    Mode="ro" Description="Full .env secrets file — copy from your laptop's project root" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/claudeclaw/.env</Config>
+  <Config Name="WhatsApp Auth" Target="/app/.wwebjs_auth" Default="/mnt/user/appdata/claudeclaw/.wwebjs_auth"
+    Mode="rw" Description="WhatsApp session — persists QR auth across restarts" Type="Path" Display="advanced" Required="false" Mask="false">/mnt/user/appdata/claudeclaw/.wwebjs_auth</Config>
+  <Config Name="WhatsApp Cache" Target="/app/.wwebjs_cache" Default="/mnt/user/appdata/claudeclaw/.wwebjs_cache"
+    Mode="rw" Description="WhatsApp Chromium cache" Type="Path" Display="advanced" Required="false" Mask="false">/mnt/user/appdata/claudeclaw/.wwebjs_cache</Config>
+  <Config Name="Uploads" Target="/app/workspace/uploads" Default="/mnt/user/appdata/claudeclaw/uploads"
+    Mode="rw" Description="Telegram media downloads" Type="Path" Display="advanced" Required="false" Mask="false">/mnt/user/appdata/claudeclaw/uploads</Config>
+
+  <!-- Key env vars (rest come from .env file above) -->
+  <Config Name="Node Environment" Target="NODE_ENV" Default="production"
+    Description="" Type="Variable" Display="advanced" Required="false" Mask="false">production</Config>
+  <Config Name="Log Level" Target="LOG_LEVEL" Default="info"
+    Description="info / debug / warn" Type="Variable" Display="advanced" Required="false" Mask="false">info</Config>
+</Container>

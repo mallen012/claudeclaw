@@ -1,0 +1,34 @@
+node_modules/
+dist/
+store/
+workspace/uploads/
+*.log
+.env
+.env.local
+.env.*.local
+.DS_Store
+*.sqlite
+*.sqlite-*
+*.db
+*.db-*
+.claude/
+.tmp/
+
+# Python (War Room)
+warroom/__pycache__/
+warroom/*.pyc
+warroom/.venv/
+warroom/venv/
+
+# PID and lock files
+*.pid
+*.lock
+
+# WhatsApp session
+.wwebjs_auth/
+.wwebjs_cache/
+
+# IDE
+.vscode/
+.idea/
+*.swp
