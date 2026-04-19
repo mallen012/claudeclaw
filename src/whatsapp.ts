@@ -7,6 +7,7 @@
 import qrcodeTerm from 'qrcode-terminal'
 import pkg from 'whatsapp-web.js'
 const { Client, LocalAuth } = pkg
+type WAClient = InstanceType<typeof Client>
 import { child } from './logger.js'
 import {
   pendingWaOutbound,
@@ -17,7 +18,7 @@ import {
 
 const log = child('whatsapp')
 
-let client: Client | null = null
+let client: WAClient | null = null
 let ready = false
 
 export function startWhatsapp(): Promise<void> {
@@ -31,7 +32,7 @@ export function startWhatsapp(): Promise<void> {
     },
   })
 
-  client.on('qr', (qr) => {
+  client.on('qr', (qr: string) => {
     log.info('WhatsApp QR — scan from your phone (WhatsApp → Linked devices)')
     qrcodeTerm.generate(qr, { small: true })
   })
@@ -43,13 +44,14 @@ export function startWhatsapp(): Promise<void> {
   })
 
   client.on('authenticated', () => log.info('WhatsApp authenticated'))
-  client.on('auth_failure', (m) => log.error({ m }, 'WhatsApp auth failure'))
-  client.on('disconnected', (reason) => {
+  client.on('auth_failure', (m: string) => log.error({ m }, 'WhatsApp auth failure'))
+  client.on('disconnected', (reason: string) => {
     ready = false
     log.warn({ reason }, 'WhatsApp disconnected')
   })
 
-  client.on('message', async (msg) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  client.on('message', async (msg: any) => {
     try {
       const chat = await msg.getChat()
       const contact = await msg.getContact()
