@@ -47,12 +47,14 @@ COPY warroom/requirements.txt /tmp/warroom-requirements.txt
 RUN python3 -m venv /opt/warroom-venv \
     && /opt/warroom-venv/bin/pip install --no-cache-dir -r /tmp/warroom-requirements.txt
 
-# Claude Code CLI — required by claude-agent-sdk to spawn agent loops
-RUN npm install -g @anthropic-ai/claude-code
-
 # Node artifacts from builder (native .node binaries compiled for Bookworm)
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/dist ./dist
+
+# Install Linux platform binary for claude-agent-sdk.
+# package-lock.json was generated on Windows so the musl optional dep is missing.
+COPY package*.json ./
+RUN npm install --no-save @anthropic-ai/claude-agent-sdk-linux-x64-musl
 
 # Source tree (agents/, skills/, warroom/, etc.)
 COPY . .
