@@ -51,10 +51,9 @@ RUN python3 -m venv /opt/warroom-venv \
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/dist ./dist
 
-# Install Linux platform binary for claude-agent-sdk.
-# package-lock.json was generated on Windows so the musl optional dep is missing.
-COPY package*.json ./
-RUN npm install --no-save --force @anthropic-ai/claude-agent-sdk-linux-x64-musl
+# Install Claude Code CLI globally so the agent SDK can find it via CLAUDE_CODE_PATH
+RUN npm install -g @anthropic-ai/claude-code --ignore-scripts || \
+    npm install -g @anthropic-ai/claude-code
 
 # Source tree (agents/, skills/, warroom/, etc.)
 COPY . .
@@ -65,7 +64,8 @@ RUN mkdir -p store workspace/uploads .wwebjs_auth .wwebjs_cache
 ENV NODE_ENV=production \
     PYTHON_BIN=/opt/warroom-venv/bin/python3 \
     PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
-    PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
+    PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium \
+    CLAUDE_CODE_PATH=/usr/local/bin/claude
 
 EXPOSE 3141 7860
 

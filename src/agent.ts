@@ -1,5 +1,5 @@
 import { query } from '@anthropic-ai/claude-agent-sdk'
-import { AGENT_MODEL, AGENT_MAX_TURNS, AGENT_TIMEOUT_MS, PROJECT_ROOT } from './config.js'
+import { AGENT_MODEL, AGENT_MAX_TURNS, AGENT_TIMEOUT_MS, PROJECT_ROOT, CLAUDE_CODE_PATH } from './config.js'
 import { child } from './logger.js'
 import { classifyError } from './errors.js'
 import { getAgent, resolveAgentDir, resolveAgentSystemPrompt } from './agent-config.js'
@@ -89,6 +89,7 @@ export async function runAgent(opts: AgentOptions): Promise<AgentResult> {
         settingSources: ['project', 'user'],
         permissionMode: 'bypassPermissions',
         maxTurns,
+        ...(CLAUDE_CODE_PATH ? { pathToClaudeCodeExecutable: CLAUDE_CODE_PATH } : {}),
       },
     })
 

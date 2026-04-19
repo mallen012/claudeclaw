@@ -22,6 +22,7 @@ export const ALLOWED_CHAT_ID = str('ALLOWED_CHAT_ID')
 export let AGENT_MODEL = str('AGENT_MODEL', 'claude-sonnet-4-6')
 export let AGENT_MAX_TURNS = num('AGENT_MAX_TURNS', 30)
 export let AGENT_TIMEOUT_MS = num('AGENT_TIMEOUT_MS', 900_000)
+export const CLAUDE_CODE_PATH = str('CLAUDE_CODE_PATH') || undefined
 
 export const SHOW_COST_FOOTER = str('SHOW_COST_FOOTER', 'compact') as
   | 'compact'
