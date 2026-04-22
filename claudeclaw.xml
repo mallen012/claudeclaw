@@ -32,6 +32,14 @@
   <Config Name="Uploads" Target="/app/workspace/uploads" Default="/mnt/user/appdata/claudeclaw/uploads"
     Mode="rw" Description="Telegram media downloads" Type="Path" Display="advanced" Required="false" Mask="false">/mnt/user/appdata/claudeclaw/uploads</Config>
 
+  <!-- Authentication — one of these two must be set -->
+  <Config Name="Claude OAuth Token" Target="CLAUDE_CODE_OAUTH_TOKEN" Default=""
+    Description="Long-lived Claude Code subscription token. Generate inside the container: `claude setup-token`. Recommended for personal use (backed by your Claude Max subscription)."
+    Type="Variable" Display="always" Required="false" Mask="true"></Config>
+  <Config Name="Anthropic API Key" Target="ANTHROPIC_API_KEY" Default=""
+    Description="Anthropic API key (sk-ant-api03-...). Alternative to OAuth token — bills per token against your API account. Use this instead if you don't have a Claude Max subscription."
+    Type="Variable" Display="always" Required="false" Mask="true"></Config>
+
   <!-- Key env vars (rest come from .env file above) -->
   <Config Name="Node Environment" Target="NODE_ENV" Default="production"
     Description="" Type="Variable" Display="advanced" Required="false" Mask="false">production</Config>
