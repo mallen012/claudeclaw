@@ -77,20 +77,19 @@ export async function runAgent(opts: AgentOptions): Promise<AgentResult> {
       externalAbort.addEventListener('abort', () => timeoutAbort.abort(), { once: true })
     }
 
+    const queryOpts: Record<string, unknown> = {
+      cwd,
+      model: AGENT_MODEL,
+      permissionMode: 'bypassPermissions',
+      maxTurns,
+    }
+    if (opts.sessionId) queryOpts.resume = opts.sessionId
+    if (system) queryOpts.appendSystemPrompt = system
+    if (CLAUDE_CODE_PATH) queryOpts.pathToClaudeCodeExecutable = CLAUDE_CODE_PATH
+
     const iter = query({
       prompt: opts.message,
-      options: {
-        cwd,
-        model: AGENT_MODEL,
-        resume: opts.sessionId,
-        systemPrompt: system
-          ? { type: 'preset', preset: 'claude_code', append: system }
-          : { type: 'preset', preset: 'claude_code' },
-        settingSources: ['project', 'user'],
-        permissionMode: 'bypassPermissions',
-        maxTurns,
-        ...(CLAUDE_CODE_PATH ? { pathToClaudeCodeExecutable: CLAUDE_CODE_PATH } : {}),
-      },
+      options: queryOpts as any,
     })
 
     for await (const event of iter) {
