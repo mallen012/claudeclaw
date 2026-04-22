@@ -22,7 +22,7 @@
   <Config Name="AppData / Store" Target="/app/store" Default="/mnt/user/appdata/claudeclaw/store"
     Mode="rw" Description="SQLite database and PID lock — must persist across restarts" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/claudeclaw/store</Config>
   <Config Name="Claude Config" Target="/root/.claude" Default="/mnt/user/appdata/claudeclaw/.claude"
-    Mode="ro" Description="Claude Code settings + MCP server configs (copy from ~/.claude on your dev machine)" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/claudeclaw/.claude</Config>
+    Mode="rw" Description="Claude Code credentials dir. Run `claude setup-token` inside the container to populate." Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/claudeclaw/.claude</Config>
   <Config Name="Env File" Target="/app/.env" Default="/mnt/user/appdata/claudeclaw/.env"
     Mode="ro" Description="Full .env secrets file — copy from your laptop's project root" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/claudeclaw/.env</Config>
   <Config Name="WhatsApp Auth" Target="/app/.wwebjs_auth" Default="/mnt/user/appdata/claudeclaw/.wwebjs_auth"
@@ -32,17 +32,22 @@
   <Config Name="Uploads" Target="/app/workspace/uploads" Default="/mnt/user/appdata/claudeclaw/uploads"
     Mode="rw" Description="Telegram media downloads" Type="Path" Display="advanced" Required="false" Mask="false">/mnt/user/appdata/claudeclaw/uploads</Config>
 
-  <!-- Authentication — one of these two must be set -->
+  <!-- Authentication — set ONE of these. Token preferred (uses your Claude Max subscription, no metered billing). -->
   <Config Name="Claude OAuth Token" Target="CLAUDE_CODE_OAUTH_TOKEN" Default=""
-    Description="Long-lived Claude Code subscription token. Generate inside the container: `claude setup-token`. Recommended for personal use (backed by your Claude Max subscription)."
+    Description="Long-lived Claude Code subscription token. Generate inside the container: docker exec -it ClaudeClaw /app/node_modules/@anthropic-ai/claude-agent-sdk-linux-x64/claude setup-token. Recommended for personal/home use (covered by Claude Max subscription)."
     Type="Variable" Display="always" Required="false" Mask="true"></Config>
   <Config Name="Anthropic API Key" Target="ANTHROPIC_API_KEY" Default=""
-    Description="Anthropic API key (sk-ant-api03-...). Alternative to OAuth token — bills per token against your API account. Use this instead if you don't have a Claude Max subscription."
+    Description="sk-ant-api03-... API key. Alternative to OAuth token — bills per token against your API account. Use this if you don't have a Claude Max subscription or want stable metered billing."
     Type="Variable" Display="always" Required="false" Mask="true"></Config>
 
-  <!-- Key env vars (rest come from .env file above) -->
+  <!-- Core env vars -->
   <Config Name="Node Environment" Target="NODE_ENV" Default="production"
     Description="" Type="Variable" Display="advanced" Required="false" Mask="false">production</Config>
   <Config Name="Log Level" Target="LOG_LEVEL" Default="info"
     Description="info / debug / warn" Type="Variable" Display="advanced" Required="false" Mask="false">info</Config>
+
+  <!-- Advanced: override Claude Code binary path (rarely needed — only for broken images) -->
+  <Config Name="Claude Code Path Override" Target="CLAUDE_CODE_PATH" Default=""
+    Description="Leave blank. Only set if the SDK's bundled binary fails to auto-detect. Example: /app/node_modules/@anthropic-ai/claude-agent-sdk-linux-x64/claude"
+    Type="Variable" Display="advanced" Required="false" Mask="false"></Config>
 </Container>
