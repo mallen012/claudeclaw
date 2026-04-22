@@ -4,11 +4,14 @@
  *
  * First run requires a QR scan in the terminal.
  */
+import fs from 'node:fs'
+import path from 'node:path'
 import qrcodeTerm from 'qrcode-terminal'
 import pkg from 'whatsapp-web.js'
 const { Client, LocalAuth } = pkg
 type WAClient = InstanceType<typeof Client>
 import { child } from './logger.js'
+import { readEnvFile } from './env.js'
 import {
   pendingWaOutbound,
   markWaOutboundSent,
@@ -21,8 +24,38 @@ const log = child('whatsapp')
 let client: WAClient | null = null
 let ready = false
 
+function cleanStaleChromiumLocks(): void {
+  const base = path.join(process.cwd(), '.wwebjs_auth')
+  if (!fs.existsSync(base)) return
+  try {
+    for (const entry of fs.readdirSync(base)) {
+      const dir = path.join(base, entry)
+      try {
+        const stat = fs.statSync(dir)
+        if (!stat.isDirectory()) continue
+        for (const f of fs.readdirSync(dir)) {
+          if (f.startsWith('Singleton')) {
+            fs.rmSync(path.join(dir, f), { force: true })
+          }
+        }
+      } catch {
+        /* ignore */
+      }
+    }
+    log.info('cleaned stale Chromium Singleton locks')
+  } catch (e) {
+    log.warn({ err: String(e) }, 'chromium lock cleanup failed')
+  }
+}
+
 export function startWhatsapp(): Promise<void> {
+  const env = readEnvFile()
+  if (env['DISABLE_WHATSAPP'] === 'true' || env['DISABLE_WHATSAPP'] === '1') {
+    log.info('WhatsApp disabled via DISABLE_WHATSAPP')
+    return Promise.resolve()
+  }
   if (client) return Promise.resolve()
+  cleanStaleChromiumLocks()
 
   client = new Client({
     authStrategy: new LocalAuth({ clientId: 'claudeclaw' }),
