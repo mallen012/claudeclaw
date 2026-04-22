@@ -80,7 +80,6 @@ export async function runAgent(opts: AgentOptions): Promise<AgentResult> {
     const queryOpts: Record<string, unknown> = {
       cwd,
       model: AGENT_MODEL,
-      permissionMode: 'bypassPermissions',
       maxTurns,
     }
     if (opts.sessionId) queryOpts.resume = opts.sessionId
