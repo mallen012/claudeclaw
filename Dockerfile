@@ -42,6 +42,10 @@ RUN python3 -m venv /opt/warroom-venv \
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/dist ./dist
 
+# The SDK auto-detect picks musl over glibc when both exist. Debian = glibc.
+# Remove the musl variant so detection can't misfire.
+RUN rm -rf /app/node_modules/@anthropic-ai/claude-agent-sdk-linux-x64-musl
+
 # Source tree (agents/, skills/, warroom/, agent.yaml, CLAUDE.md, etc.)
 COPY . .
 
